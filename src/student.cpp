@@ -7,7 +7,7 @@
 //
 //
 //         ============================================================
-//                    STUDY CASE: APLIKASI EDITOR "TULIS"
+//                     STUDY CASE: APLIKASI EDITOR "TULIS"
 //         ============================================================
 //
 // Pertemuan ini hanya punya SATU soal, yaitu study case di bawah ini. Empat
@@ -54,7 +54,7 @@
 //        |
 //       [10]  <- paling pertama masuk, paling terakhir keluar
 //        |
-//      nullptr
+//       nullptr
 //
 //   `top`      penunjuk ke elemen PALING ATAS. Bernilai `nullptr` berarti
 //              tumpukannya sedang KOSONG.
@@ -109,7 +109,7 @@
 //
 //   1. Anda mengetik. Setiap perubahan dicatat ke tumpukan riwayat, dan yang
 //      baru selalu diletakkan di PUNCAK.
-//                                                            -> SOAL 1
+//                                                                  -> SOAL 1
 //
 //   2. Status bar menampilkan perubahan terakhir tanpa membatalkannya, dan
 //      panel riwayat menampilkan seluruh tumpukan dari atas ke bawah.
@@ -120,15 +120,15 @@
 //      editor perlu tahu perubahan apa itu supaya bisa mengembalikannya.
 //      Menekan Ctrl+Z pada dokumen yang belum diapa-apakan tidak boleh
 //      membuat aplikasi berhenti tidak wajar.
-//                                                            -> SOAL 2
+//                                                                  -> SOAL 2
 //
 //   4. Anda menekan Ctrl+S. Dokumen tersimpan, dan seluruh riwayat undo
 //      dibuang sekaligus supaya tidak menumpuk di memori.
-//                                                            -> SOAL 3
+//                                                                  -> SOAL 3
 //
 //   5. Anda beralih menulis kode. Editor memeriksa apakah tanda kurung yang
 //      Anda ketik sudah berpasangan dengan seimbang.
-//                                                            -> SOAL 4
+//                                                                  -> SOAL 4
 //
 // Keempat pekerjaan bertanda SOAL itulah seluruh isi pertemuan ini. Di bawah
 // nanti Anda tidak akan menemukan cerita baru — yang ada hanya rincian teknis:
@@ -145,10 +145,10 @@
 // -----------------------------------------------------------------------------
 // SUDAH DISEDIAKAN, TIDAK DINILAI
 // -----------------------------------------------------------------------------
-//   inisialisasi   menyiapkan tumpukan baru menjadi kosong
-//   isEmpty        apakah tumpukannya sedang kosong
-//   peek           melihat puncak tanpa mengambilnya
-//   display        membaca seluruh isi tumpukan menjadi satu baris teks
+//   inisialisasi  menyiapkan tumpukan baru menjadi kosong
+//   isEmpty       apakah tumpukannya sedang kosong
+//   peek          melihat puncak tanpa mengambilnya
+//   display       membaca seluruh isi tumpukan menjadi satu baris teks
 //
 //   Keempatnya ada di bagian bawah file ini, sudah ditulis lengkap. Pakai
 //   `display` sesering mungkin untuk memeriksa hasil kerja Anda sendiri.
@@ -201,10 +201,10 @@ using namespace std;
 //   sekarang mereka semua berada di bawah nilai baru itu.
 //
 // Parameternya:
-//   `s`         stack milik pemanggil. Bertanda `&`, sehingga perubahan pada
-//               `s.top` ikut terasa oleh pemanggil
-//   `nilai`     nilai yang mau dimasukkan
-//   kembalian   `true` bila nilai baru berhasil masuk
+//   `s`        stack milik pemanggil. Bertanda `&`, sehingga perubahan pada
+//              `s.top` ikut terasa oleh pemanggil
+//   `nilai`    nilai yang mau dimasukkan
+//   kembalian  `true` bila nilai baru berhasil masuk
 //
 // Contoh:
 //   Sebelum : Top -> 20 -> 10
@@ -238,7 +238,11 @@ using namespace std;
 // =============================================================================
 
 bool push(Stack& s, int nilai) {
-    return false;
+    Node* nodeBaru = new Node;
+    nodeBaru->data = nilai;
+    nodeBaru->next = s.top;
+    s.top = nodeBaru;
+    return true;
 }
 
 // =============================================================================
@@ -261,10 +265,10 @@ bool push(Stack& s, int nilai) {
 //   mengeluarkan dan membuang node-nya.
 //
 // Parameternya:
-//   `s`         stack milik pemanggil. Bertanda `&`
-//   `nilai`     tempat pemanggil menerima nilai yang keluar. Bertanda `&`
-//   kembalian   `true` bila ada elemen yang benar-benar dikeluarkan, `false`
-//               bila tumpukannya sedang kosong
+//   `s`        stack milik pemanggil. Bertanda `&`
+//   `nilai`    tempat pemanggil menerima nilai yang keluar. Bertanda `&`
+//   kembalian  `true` bila ada elemen yang benar-benar dikeluarkan, `false`
+//              bila tumpukannya sedang kosong
 //
 // Contoh:
 //   Sebelum : Top -> 30 -> 20 -> 10
@@ -300,7 +304,14 @@ bool push(Stack& s, int nilai) {
 // =============================================================================
 
 bool pop(Stack& s, int& nilai) {
-    return false;
+    if (s.top == nullptr) {
+        return false;
+    }
+    Node* temp = s.top;
+    nilai = temp->data;
+    s.top = s.top->next;
+    delete temp;
+    return true;
 }
 
 // =============================================================================
@@ -318,14 +329,14 @@ bool pop(Stack& s, int& nilai) {
 //   memori, dan itu ikut dinilai.
 //
 // Parameternya:
-//   `s`         stack milik pemanggil. Bertanda `&`
-//   kembalian   tidak ada (fungsi bertipe `void`)
+//   `s`        stack milik pemanggil. Bertanda `&`
+//   kembalian  tidak ada (fungsi bertipe `void`)
 //
 // Contoh:
 //   Sebelum : Top -> 50 -> 40 -> 30 -> 20 -> 10
 //   Operasi : clear(s)
 //   Sesudah : (kosong) — `s.top` bernilai nullptr, dan kelima node sudah
-//             dibuang dari memori
+//              dibuang dari memori
 //
 // Yang perlu diingat:
 //   - Sesudah selesai, `s.top` bernilai `nullptr`.
@@ -347,10 +358,15 @@ bool pop(Stack& s, int& nilai) {
 // =============================================================================
 
 void clear(Stack& s) {
+    while (s.top != nullptr) {
+        Node* temp = s.top;
+        s.top = s.top->next;
+        delete temp;
+    }
 }
 
 // =============================================================================
-// SOAL 4 — kurungSeimbang                                              25 poin
+// SOAL 4 — kurungSeimbang                                             25 poin
 //          Langkah 5 pada cerita: pemeriksa kurung pada kode
 // =============================================================================
 // Yang diminta:
@@ -370,8 +386,8 @@ void clear(Stack& s) {
 //
 // Parameternya:
 //   `ekspresi`  teks yang mau diperiksa. Boleh sepanjang apa pun, boleh juga
-//               kosong
-//   kembalian   `true` bila seimbang, `false` bila tidak
+//              kosong
+//   kembalian  `true` bila seimbang, `false` bila tidak
 //
 // Contoh:
 //   "( a + b ) * ( c - d )"   -> true
@@ -410,7 +426,30 @@ void clear(Stack& s) {
 // =============================================================================
 
 bool kurungSeimbang(const string& ekspresi) {
-    return false;
+    Stack st;
+    inisialisasi(st);
+
+    for (char c : ekspresi) {
+        if (c == '(' || c == '[' || c == '{') {
+            push(st, static_cast<int>(c));
+        } else if (c == ')' || c == ']' || c == '}') {
+            int topChar;
+            if (!pop(st, topChar)) {
+                return false;
+            }
+            char buka = static_cast<char>(topChar);
+            if ((c == ')' && buka != '(') ||
+                (c == ']' && buka != '[') ||
+                (c == '}' && buka != '{')) {
+                clear(st);
+                return false;
+            }
+        }
+    }
+
+    bool seimbang = isEmpty(st);
+    clear(st);
+    return seimbang;
 }
 
 // =============================================================================
